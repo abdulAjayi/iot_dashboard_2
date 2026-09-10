@@ -1,16 +1,36 @@
 import { WebSocket } from "ws";
+import http from "http";
 import { meters } from "./meterConfig.js";
 import { generateSensorData } from "./sensorUtils.js";
 
 const WS_URL = process.env.WS_URL || "ws://localhost:3000?type=gateway";
+const PORT = process.env.PORT || 3000;
 
 let intervalId = null;
+let wsConnected = false;
+
+// Minimal HTTP server just to satisfy Render's port check + act as a health endpoint
+http
+  .createServer((req, res) => {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({
+        status: "ok",
+        gatewayConnected: wsConnected,
+        uptime: process.uptime(),
+      }),
+    );
+  })
+  .listen(PORT, () => {
+    console.log(`Health server listening on port ${PORT}`);
+  });
 
 function connect() {
   const ws = new WebSocket(WS_URL);
 
   ws.on("open", () => {
     console.log("gateway connected successfully");
+    wsConnected = true;
 
     if (intervalId) clearInterval(intervalId);
 
@@ -20,7 +40,7 @@ function connect() {
         const payload = {
           type: "sensor_data",
           meterId: meter.id,
-          ...sensorData, // includes thresholds, per-reading status, meterStatus
+          ...sensorData,
         };
         if (ws.readyState === 1) {
           ws.send(JSON.stringify(payload));
@@ -41,6 +61,7 @@ function connect() {
 
   ws.on("close", () => {
     console.log("gateway reconnecting in 3s...");
+    wsConnected = false;
     clearInterval(intervalId);
     setTimeout(connect, 3000);
   });
