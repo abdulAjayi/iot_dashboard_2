@@ -4,6 +4,7 @@ import authRoutes from "./routes/auth.js";
 import http from "http";
 import cors from "cors";
 const app = express();
+app.set("trust proxy", 1); // trust Render's reverse proxy for X-Forwarded-For
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 import helmet from "helmet";
