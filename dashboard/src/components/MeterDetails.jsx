@@ -1,0 +1,23 @@
+const meterInfo = [
+  { label: "Meter ID", value: "GB - 04" },
+  { label: "Meter Location", value: "UBIT BRAVO" },
+  { label: "MAC Address", value: "00:1A:2B:3C:4D:5E" },
+];
+
+export default function MeterDetails() {
+  return (
+    <div className="bg-gray-900 border border-green-800 rounded-xl p-4">
+      <h2 className="text-green-400 font-bold text-sm mb-3 uppercase tracking-wider">
+        Meter Details
+      </h2>
+      <div className="grid grid-cols-3 gap-4 text-sm">
+        {meterInfo.map(({ label, value }) => (
+          <div key={label}>
+            <p className="text-gray-400 text-xs">{label}</p>
+            <p className="text-white font-semibold">{value}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
