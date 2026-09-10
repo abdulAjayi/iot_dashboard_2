@@ -93,14 +93,9 @@ router.post("/login", loginLimiter, async (req, res) => {
       hasPin: !!user.pin,
     });
   } catch (error) {
-    console.error("LOGIN ERROR:", error);
-    res.status(500).json({ error: error.message }); // TEMP — remove before real launch
+    res.status(500).json({ error: "something went wrong, please try again" });
   }
 });
-
-// catch (error) {
-//     res.status(500).json({ error: "something went wrong, please try again" });
-//   }
 
 // Get current logged in user — useful on page refresh
 router.get("/me", requireAuth, (req, res) => {
