@@ -35,7 +35,7 @@ import helmet from "helmet";
 https: app.use(
   cors({
     origin: [
-      "https://iot-dashboard-rouge-zeta.vercel.app",
+      "https://iot-dashboard-2-5d9d.vercel.app",
       "http://localhost:5173",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
