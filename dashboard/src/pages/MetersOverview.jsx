@@ -79,14 +79,12 @@ import useMeterStore from "../store/useMeterStore";
 import useAuthStore from "../store/useAuthStore";
 import MeterCard from "../components/MeterCard";
 import SummaryPill from "../components/SummaryPill";
-import { useSocket } from "../hooks/useSocket";
 
 export default function MetersOverview() {
   const meters = useMeterStore((s) => s.meters);
   const navigate = useNavigate();
   const logout = useAuthStore((s) => s.logout);
   const user = useAuthStore((s) => s.user);
-  useSocket();
 
   const sorted = [...meters].filter(Boolean).sort((a, b) => {
     const order = { critical: 0, normal: 1, offline: 2 };

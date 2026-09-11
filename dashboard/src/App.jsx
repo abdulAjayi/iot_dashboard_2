@@ -12,10 +12,12 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import useAuthStore from "./store/useAuthStore";
+import { useSocket } from "../hooks/useSocket";
 import SetupPin from "./pages/SetupPin";
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 function AppRoutes() {
+  useSocket();
   const { login, logout, token } = useAuthStore();
   const navigate = useNavigate();
 
