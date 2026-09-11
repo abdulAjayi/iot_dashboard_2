@@ -33,7 +33,7 @@ function getStatus(value, { min, max }) {
 // Starts at each meter's baseline the first time it's read, then
 // climbs by ENERGY_STEP on every subsequent call. This persists only
 // for the lifetime of this process (resets on restart/redeploy).
-const ENERGY_STEP = 0.6;
+const ENERGY_STEP = 0.06;
 const energyTotals = {};
 
 function getNextEnergyReading(meterId, baseline) {
