@@ -4,25 +4,19 @@ import { meters } from "./meterConfig.js";
 import { generateSensorData } from "./sensorUtils.js";
 
 const WS_URL = process.env.WS_URL || "ws://localhost:3000?type=gateway";
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 
 let intervalId = null;
-let wsConnected = false;
+let gatewayConnected = false;
 
-// Minimal HTTP server just to satisfy Render's port check + act as a health endpoint
+// --- Minimal HTTP server just so Render sees the port bound ---
 http
   .createServer((req, res) => {
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(
-      JSON.stringify({
-        status: "ok",
-        gatewayConnected: wsConnected,
-        uptime: process.uptime(),
-      }),
-    );
+    res.end(JSON.stringify({ status: "ok", gatewayConnected }));
   })
   .listen(PORT, () => {
-    console.log(`Health server listening on port ${PORT}`);
+    console.log(`gateway health server listening on ${PORT}`);
   });
 
 function connect() {
@@ -30,7 +24,7 @@ function connect() {
 
   ws.on("open", () => {
     console.log("gateway connected successfully");
-    wsConnected = true;
+    gatewayConnected = true;
 
     if (intervalId) clearInterval(intervalId);
 
@@ -61,7 +55,7 @@ function connect() {
 
   ws.on("close", () => {
     console.log("gateway reconnecting in 3s...");
-    wsConnected = false;
+    gatewayConnected = false;
     clearInterval(intervalId);
     setTimeout(connect, 3000);
   });
